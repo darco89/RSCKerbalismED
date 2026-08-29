@@ -1,0 +1,13 @@
+# Visual Studio / .NET
+bin/
+obj/
+.vs/
+.vscode/
+
+# Build output
+*.dll
+*.pdb
+
+# KSP runtime files
+*.log
+Logs/
