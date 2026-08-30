@@ -1,0 +1,19 @@
+============================================================
+RSCKerbalismED
+RoverScience Continued - Kerbalism Edition
+============================================================
+
+Project / Mod Name : RSCKerbalismED
+Full Name          : RoverScience Continued - Kerbalism Edition
+Short Name         : RSCKE
+
+C# Namespace       : RSCKerbalismED
+Harmony ID         : RSCKerbalismED
+Log Prefix         : [RSCKerbalismED]
+
+Configuration Files
+-------------------
+RSCKerbalismED.cfg
+RSCKerbalismED_Science.cfg
+
+============================================================

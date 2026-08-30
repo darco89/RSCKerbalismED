@@ -3,303 +3,156 @@ using System.Reflection;
 using HarmonyLib;
 using UnityEngine;
 
-namespace KerbalismRSC
+namespace RSCKerbalismED
 {
     [HarmonyPatch]
     internal static class RoverScienceAnalyzePatch
     {
+        /// <summary>
+        /// Finds the RSC AnalyzeScienceSample method to patch.
+        /// </summary>
+        /// <returns>The RSC analysis method.</returns>
         private static MethodBase TargetMethod()
         {
-            Type roverScienceType = AccessTools.TypeByName("RoverScience.RoverScience");
-            if (roverScienceType == null)
-            {
-                Debug.LogError("[KerbalismRSC] ERROR: Could not find RoverScience.RoverScience.");
-                return null;
-            }
-
-            MethodInfo method = AccessTools.Method(roverScienceType, "AnalyzeScienceSample");
-            if (method == null)
-            {
-                Debug.LogError("[KerbalismRSC] ERROR: Could not find AnalyzeScienceSample().");
-                return null;
-            }
-
-            Debug.Log("[KerbalismRSC] Found RSC analysis method: " + method.DeclaringType.FullName + "." + method.Name);
-            return method;
-        }
-
-        private static bool Prefix(object __instance)
-        {
-            if (__instance == null)
-            {
-                Debug.LogError("[KerbalismRSC] RSC INSTANCE NOT FOUND");
-                return false;
-            }
+            const string RSC_RoverScience_Member = "RoverScience.RoverScience";
+            const string RSC_Member_Method = "AnalyzeScienceSample";
 
             try
             {
-                return ProcessAnalysis(__instance);
+                Type roverScienceType = AccessTools.TypeByName(RSC_RoverScience_Member);
+                MethodInfo targetMethod = AccessTools.Method(roverScienceType, RSC_Member_Method);
+                Debug.Log("[RSCKerbalismED] INFO: Found RSC analysis method: " + targetMethod.DeclaringType.FullName + "." + targetMethod.Name);
+                return targetMethod;
             }
             catch (Exception ex)
             {
-                Debug.LogError("[KerbalismRSC] Analysis processing failed.");
+                Debug.LogError("[RSCKerbalismED] ERROR: Could not properly obtain " + RSC_RoverScience_Member + ".");
                 Debug.LogException(ex);
-                return true;
+                throw;
             }
         }
 
-        private static bool ProcessAnalysis(object roverScience)
+        /// <summary>
+        /// Replaces RSC's Analyze Science button execution.
+        /// Returning false prevents the original RSC method from executing,
+        /// since RSC attempts to use Stock's ModuleScienceContainer.
+        /// </summary>
+        /// <param name="__instance">The RSC RoverScience instance.</param>
+        /// <returns>False to suppress the original RSC method.</returns>
+        private static bool Prefix(object __instance)
         {
-            object scienceSpot = GetScienceSpot(roverScience);
-            if (scienceSpot == null)
+            try
             {
-                Debug.LogError("[KerbalismRSC] RSC didn't provide a ScienceSpot.");
-                return false;
+                // Get relevant data from RSC's roverScience instance.
+                RSCKEScienceSpot scienceSpot = GetRSCScienceSpot(__instance);
+
+                if (scienceSpot.IsValid)
+                    ProcessAnalysis(scienceSpot);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("[RSCKerbalismED] ERROR: Analysis processing failed.");
+                Debug.LogException(ex);
             }
 
-            Type scienceSpotType = scienceSpot.GetType();
-            bool isAnomaly = GetIsAnomaly(scienceSpot, scienceSpotType);
-            string actualPotential = GetActualPotential(scienceSpot, scienceSpotType);
-            LogRSCFieldsForScieceSpot(scienceSpot, scienceSpotType, isAnomaly, actualPotential);
-
-            Vessel vessel = FlightGlobals.ActiveVessel;
-            CelestialBody body = vessel?.mainBody;
-
-            string bodyName = body != null ? body.name : "<unknown>";
-            string biomeName = GetCurrentBiome();
-
-            CalculateSample(
-                bodyName,
-                biomeName,
-                actualPotential,
-                isAnomaly,
-                out double sampleMassKg,
-                out double finalScience);
-
-            TestKerbalismSubject(vessel, body, biomeName);
-
-            // Suppress RSC's original analysis while we test the Kerbalism integration.
+            // Suppress the rest of RSC's gameplay cycle.
             return false;
         }
 
-        private static void TestKerbalismSubject(
-            Vessel vessel,
-            CelestialBody body,
-            string biomeName)
+        /// <summary>
+        /// Processes the current RSC science spot and stores the resulting
+        /// sample through Kerbalism.
+        /// </summary>
+        /// <param name="scienceSpot">The current RSC science spot.</param>
+        private static void ProcessAnalysis(RSCKEScienceSpot scienceSpot)
         {
-            Debug.Log("[KerbalismRSC] SUBJECT TEST | Asking Kerbalism for SubjectData.");
+            // Get from RSC current data
+            string actualPotential = scienceSpot.AdjustedPotentialGenerated;
+            Debug.Log("[RSCKerbalismED] INFO: RSC Science Spot Actual Potential: " + actualPotential + ".");
 
-            bool subjectFound = KerbalismSampleBridge.TestSubject(
-                vessel,
-                body,
-                biomeName);
+            // Get from KSP (active vessel).
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            CelestialBody body = vessel?.mainBody;
+            string bodyName = body?.name;
+            string biomeName = ScienceUtil.GetExperimentBiome(body, vessel.latitude, vessel.longitude);
+            Debug.Log("[RSCKerbalismED] INFO: Biome for building Sample (active vessel's) » Body: " +
+                bodyName + " | Biome: " + biomeName);
 
-            if (!subjectFound)
+            // Get from RSCKE config, according to RSC current data.
+            if (!Plugin.rcskeConfig.TryGetPotentialRange(actualPotential, out double min, out double max))
             {
-                Debug.LogError("[KerbalismRSC] SUBJECT TEST | Subject lookup failed.");
+                string msg = "[RSCKerbalismED] ERROR: Couldnt find a configured ranged for category '" + actualPotential + "'.";
+                Debug.LogError(msg);
+                throw new InvalidOperationException(msg);
             }
-            else
+            Debug.Log("[RSCKerbalismED] INFO | RSC Science Spot (final) Potential='" + actualPotential);
+
+            // Get from Kerbalism Data
+            KERBALISM.SubjectData subjectData = RSCKEHub.GetKerbalismScienceSubject(vessel, body, biomeName);
+            if (subjectData == null)
+                throw new InvalidOperationException("[RSCKerbalismED] ERROR: Could not obtain Kerbalism Science Subject.");
+
+            // Get RCSKE calculations
+            double massRoll = UnityEngine.Random.Range((float)min, (float)max);
+            // massRoll will determine sample mass for each analysis
+            massRoll = Math.Round(Math.Max(0.0, Math.Min(1.0, massRoll)), 1);
+            Debug.Log("[RSCKerbalismED] INFO | RSC Potential='" + actualPotential +
+                "' | Configured Range: " + FormatRangeForLog(min, max) +
+                " | RSCKE Mass Roll: " + massRoll.ToString("0.0"));
+
+            // Prepare the sample to store.
+            RSCKEScienceSample sample = RoverScienceStoragePatch.PrepareDataToStore(vessel, subjectData, massRoll);
+
+            if (sample == null)
             {
-                Debug.Log("[KerbalismRSC] SUBJECT TEST | Subject lookup succeeded.");
+                Debug.Log("[RSCKerbalismED] INFO: No sample data available to store.");
+                return;
             }
+
+            // Store the sample through Kerbalism.
+            if (!RoverScienceStoragePatch.StoreKerbalismSample(vessel, sample))
+                throw new InvalidOperationException("[RSCKerbalismED] ERROR: Kerbalism sample storage failed.");
         }
 
-        private static object GetScienceSpot(object roverScience)
+        /// <summary>
+        /// Retrieves RSC's current ScienceSpot from the RoverScience instance.
+        /// </summary>
+        /// <param name="roverScienceInstance">The RSC RoverScience instance.</param>
+        /// <returns>The current RSC science spot.</returns>
+        private static RSCKEScienceSpot GetRSCScienceSpot(object roverScienceInstance)
         {
-            Type roverScienceType = roverScience.GetType();
-
+            // Get Rover Member.
+            Type roverScienceType = roverScienceInstance.GetType();
             FieldInfo roverField = AccessTools.Field(roverScienceType, "rover");
-            object rover = roverField?.GetValue(roverScience);
+            object rover = roverField?.GetValue(roverScienceInstance);
 
             if (rover == null)
-            {
-                Debug.LogError("[KerbalismRSC] ANALYSIS ERROR | RSC rover is null.");
-                return null;
-            }
+                Debug.LogError("[RSCKerbalismED] ERROR: RSC rover instance is null.");
 
+            // Get Rover's Science Spot Member.
             Type roverType = rover.GetType();
-
             FieldInfo scienceSpotField = AccessTools.Field(roverType, "scienceSpot");
             object scienceSpot = scienceSpotField?.GetValue(rover);
 
             if (scienceSpot == null)
-            {
-                Debug.LogError("[KerbalismRSC] ANALYSIS ERROR | RSC scienceSpot is null.");
-                return null;
-            }
+                Debug.LogError("[RSCKerbalismED] ERROR: RSC scienceSpot instance is null.");
 
-            return scienceSpot;
+            // Build our object to work with.
+            RSCKEScienceSpot returningSpot = new(scienceSpot);
+            Debug.Log("[RSCKerbalismED] INFO: Science Spot Data obtained: " + returningSpot + ".");
+            return returningSpot;
         }
 
-        private static bool GetIsAnomaly(object scienceSpot, Type scienceSpotType)
-        {
-            FieldInfo isAnomalyField = AccessTools.Field(scienceSpotType, "isAnomaly");
-
-            return isAnomalyField != null &&
-                   Convert.ToBoolean(isAnomalyField.GetValue(scienceSpot));
-        }
-
-        private static string GetActualPotential(object scienceSpot, Type scienceSpotType)
-        {
-            // RSC adjusts the original potential during the gameplay loop.
-            // adjustedPotentialGenerated is the final category shown when
-            // the player can confirm the sample.
-            FieldInfo adjustedPotentialGeneratedField = AccessTools.Field(
-                scienceSpotType,
-                "adjustedPotentialGenerated");
-
-            object adjustedPotentialGenerated =
-                adjustedPotentialGeneratedField?.GetValue(scienceSpot);
-
-            if (adjustedPotentialGenerated == null)
-            {
-                return "";
-            }
-
-            // RSC adds "!" for display purposes (for example, "Very high!").
-            // Normalize it so it matches the config Name property.
-            return NormalizePotentialName(adjustedPotentialGenerated.ToString());
-        }
-
-        private static string NormalizePotentialName(string value)
-        {
-            if (string.IsNullOrEmpty(value))
-                return "";
-
-            return value
-                .Trim()
-                .TrimEnd('!')
-                .Trim()
-                .ToLowerInvariant();
-        }
-
-        // This is the method that will grab the RSC data necessary to create a Kerbalism Sample.
-        private static void CalculateSample(
-            string bodyName,
-            string biomeName,
-            string actualPotential,
-            bool isAnomaly,
-            out double sampleMassKg,
-            out double finalScience)
-        {
-            double fraction;
-            string rangeDescription;
-
-            if (isAnomaly)
-            {
-                if (!SampleConfig.TryGetAnomalyRange(out double anomalyMin, out double anomalyMax))
-                {
-                    throw new InvalidOperationException("Anomaly range is not configured.");
-                }
-
-                fraction = UnityEngine.Random.Range((float)anomalyMin, (float)anomalyMax);
-                rangeDescription = FormatRange(anomalyMin, anomalyMax);
-
-                Debug.Log("[KerbalismRSC] ANALYSIS | Anomaly detected.");
-            }
-            else
-            {
-                if (!SampleConfig.TryGetPotentialRange(actualPotential, out double normalMin, out double normalMax))
-                {
-                    throw new InvalidOperationException(
-                        "Unknown actual RSC potential category '" + actualPotential + "'.");
-                }
-
-                fraction = UnityEngine.Random.Range((float)normalMin, (float)normalMax);
-                rangeDescription = FormatRange(normalMin, normalMax);
-
-                Debug.Log("[KerbalismRSC] ANALYSIS | Actual RSC potential = " + actualPotential + ".");
-            }
-
-            fraction = Math.Max(0.0, Math.Min(1.0, fraction));
-
-            double experimentMassKg = SampleConfig.GetExperimentMassKg(bodyName, biomeName);
-            sampleMassKg = experimentMassKg * fraction;
-
-            double sciencePerKgPercent = SampleConfig.GetSciencePerKgPercent(bodyName);
-            double scaledScience = SampleConfig.GetScaledScience();
-            double sciencePerKg = sciencePerKgPercent / 100.0;
-
-            finalScience = Math.Round(
-                sampleMassKg *
-                sciencePerKg *
-                (scaledScience / 100.0),
-                1);
-
-            Debug.Log("[KerbalismRSC] SAMPLE | Body=" + bodyName +
-                " | Biome=" + biomeName +
-                " | Anomaly=" + isAnomaly +
-                " | ActualPotential=" + actualPotential +
-                " | Range=" + rangeDescription +
-                " | Fraction=" + fraction.ToString("P2") +
-                " | ExperimentMass=" + experimentMassKg + "kg" +
-                " | Gathered=" + sampleMassKg + "kg" +
-                " | SciencePerKg=" + sciencePerKg.ToString("0.00") +
-                " | ScaledScience=" + scaledScience + "%" +
-                " | FinalScience=" + finalScience.ToString("0.0"));
-        }
-
-        private static string GetCurrentBiome()
-        {
-            try
-            {
-                Vessel vessel = FlightGlobals.ActiveVessel;
-                if (vessel == null)
-                {
-                    Debug.LogError("[KerbalismRSC] BIOME | Active vessel is null.");
-                    return "<unknown>";
-                }
-
-                CelestialBody body = vessel.mainBody;
-                if (body == null)
-                {
-                    Debug.LogError("[KerbalismRSC] BIOME | Active vessel has no main body.");
-                    return "<unknown>";
-                }
-
-                string biome = ScienceUtil.GetExperimentBiome(body, vessel.latitude, vessel.longitude);
-                if (string.IsNullOrEmpty(biome))
-                {
-                    Debug.LogError("[KerbalismRSC] BIOME | KSP returned an empty biome.");
-                    return "<unknown>";
-                }
-
-                Debug.Log("[KerbalismRSC] BIOME | KSP active vessel biome = " + biome);
-                return biome;
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("[KerbalismRSC] BIOME | Failed to determine active vessel biome.");
-                Debug.LogException(ex);
-                return "<unknown>";
-            }
-        }
-
-        private static string FormatRange(double min, double max)
+        /// <summary>
+        /// Formats a fractional range as percentages for logging.
+        /// </summary>
+        /// <param name="min">The minimum fractional value.</param>
+        /// <param name="max">The maximum fractional value.</param>
+        /// <returns>The formatted percentage range.</returns>
+        private static string FormatRangeForLog(double min, double max)
         {
             return (min * 100.0).ToString("0.##") + "%-" + (max * 100.0).ToString("0.##") + "%";
         }
 
-        private static void LogRSCFieldsForScieceSpot(object scienceSpot, Type scienceSpotType, bool isAnomaly, string actualPotential)
-        {
-            FieldInfo potentialField = AccessTools.Field(scienceSpotType, "potential");
-            object potential = potentialField?.GetValue(scienceSpot);
-            FieldInfo potentialGeneratedField = AccessTools.Field(scienceSpotType, "potentialGenerated");
-            object potentialGenerated = potentialGeneratedField?.GetValue(scienceSpot);
-            FieldInfo adjustedPotentialGeneratedField = AccessTools.Field(scienceSpotType, "adjustedPotentialGenerated");
-            object adjustedPotentialGenerated = adjustedPotentialGeneratedField?.GetValue(scienceSpot);
-            FieldInfo predictedSpotField = AccessTools.Field(scienceSpotType, "predictedSpot");
-            object predictedSpot = predictedSpotField?.GetValue(scienceSpot);
-            FieldInfo potentialScienceField = AccessTools.Field(scienceSpotType, "potentialScience");
-            object potentialScience = potentialScienceField?.GetValue(scienceSpot);
-
-            Debug.Log("[KerbalismRSC] ANALYSIS | RSC POTENTIAL STATE" + " | potential=" +
-                (potential != null ? potential.ToString() : "<null>") + " | potentialGenerated=" +
-                (potentialGenerated != null ? potentialGenerated.ToString() : "<null>") +
-                " | adjustedPotentialGenerated=" + (adjustedPotentialGenerated != null ? adjustedPotentialGenerated.ToString() : "<null>") +
-                " | predictedSpot=" + (predictedSpot != null ? predictedSpot.ToString() : "<null>") +
-                " | potentialScience=" + (potentialScience != null ? potentialScience.ToString() : "<null>") +
-                " | isAnomaly=" + isAnomaly + " | actualPotential=" + actualPotential);
-        }
     }
 }
