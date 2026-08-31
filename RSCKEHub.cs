@@ -3,12 +3,16 @@ using UnityEngine;
 
 namespace RSCKerbalismED
 {
+    /// <summary>
+    /// Provides access to 3rd party APIs (KSP, Kerbalism, RSC).
+    /// </summary>
     internal static class RSCKEHub
     {
         private const string ExperimentId = "RSCKerbalismED";
 
         /// <summary>
-        /// Gets the Kerbalism subject for the specified vessel, body, and biome.
+        /// Gets the Kerbalism SubjectData for our experiment and the
+        /// current active vessel's situation.
         /// </summary>
         /// <param name="vessel">The vessel containing the sample.</param>
         /// <param name="body">The celestial body where the sample was collected.</param>
@@ -18,6 +22,7 @@ namespace RSCKerbalismED
         {
             if (vessel == null || body == null || string.IsNullOrEmpty(biomeName))
                 return null;
+
             try
             {
                 KERBALISM.ExperimentInfo experimentInfo = KERBALISM.ScienceDB.GetExperimentInfo(ExperimentId);
@@ -57,6 +62,28 @@ namespace RSCKerbalismED
             }
 
             return -1;
+        }
+
+        /// <summary>
+        /// Retrieves RSC's current ScienceSpot directly from the RoverScience instance.
+        /// </summary>
+        /// <param name="roverScienceInstance">The RSC RoverScience instance.</param>
+        /// <returns>The current RSC science spot.</returns>
+        internal static RSCKEScienceSpot GetRSCScienceSpot(RoverScience.RoverScience roverScienceInstance)
+        {
+            if (roverScienceInstance == null)
+                throw new InvalidOperationException("[RSCKerbalismED] ERROR: RSC RoverScience instance is null.");
+
+            if (roverScienceInstance.rover == null)
+                throw new InvalidOperationException("[RSCKerbalismED] ERROR: RSC rover instance is null.");
+
+            if (roverScienceInstance.rover.scienceSpot == null)
+                throw new InvalidOperationException("[RSCKerbalismED] ERROR: RSC scienceSpot instance is null.");
+
+            // Build our object directly from RSC's public ScienceSpot instance.
+            RSCKEScienceSpot returningSpot = new(roverScienceInstance.rover.scienceSpot);
+            Debug.Log("[RSCKerbalismED] INFO: Science Spot Data obtained: " + returningSpot + ".");
+            return returningSpot;
         }
     }
 }

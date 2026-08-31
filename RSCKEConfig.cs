@@ -45,14 +45,12 @@ namespace RSCKerbalismED
         {
             // general settings node
             ConfigNode settings = root.GetNode(RSCKE_CONF_SETTINGS);
-
             // ranges definitions per RSC "category" node
             ConfigNode categories = settings.GetNode(RSCKE_CONF_CATEGORIES_RANGES);
 
             foreach (ConfigNode node in categories.nodes)
             {
                 string rangeCategoryName = node.GetValue("Name");
-
                 if (!TryReadRange(node, out double min, out double max))
                 {
                     Debug.LogError("[RSCKerbalismED] ERROR: Invalid potential range in node: " + node.name);
@@ -69,9 +67,9 @@ namespace RSCKerbalismED
 
                 // log mapping
                 Debug.Log("[RSCKerbalismED] INFO: Potential='" + categoryKey + "' | Range=" +
-                    (min * 100.0).ToString("0.##", CultureInfo.InvariantCulture) + "%-" +
-                    (max * 100.0).ToString("0.##", CultureInfo.InvariantCulture) + "%");
+                    potentialRanges[categoryKey].ToPercentageString());
             }
+
             Debug.Log("[RSCKerbalismED] INFO: Ranges for ScienceSpot Categories Loaded.");
         }
 
@@ -120,12 +118,10 @@ namespace RSCKerbalismED
         /// normalized to lowercase and trimmed.
         /// </summary>
         /// <param name="potential">The actual RSC potential category returned by RSC.</param>
-        /// <param name="min">Receives the configured minimum mass fraction.</param>
-        /// <param name="max">Receives the configured maximum mass fraction.</param>
-        /// <returns>True if a configured range was found; otherwise false.</returns>
-        internal bool TryGetPotentialRange(string potential, out double min, out double max)
+        /// <returns>The configured percentage range, or null if no matching range was found.</returns>
+        internal RSCKEPercentageRange GetPotentialRange(string potential)
         {
-            return TryGetRange(potentialRanges, potential, out min, out max);
+            return GetRange(potentialRanges, potential);
         }
 
         /// <summary>
@@ -133,25 +129,20 @@ namespace RSCKerbalismED
         /// </summary>
         /// <param name="ranges">The configured potential ranges.</param>
         /// <param name="potential">The RSC potential category name.</param>
-        /// <param name="min">Receives the configured minimum mass fraction.</param>
-        /// <param name="max">Receives the configured maximum mass fraction.</param>
-        /// <returns>True if a matching range was found; otherwise false.</returns>
-        private bool TryGetRange(Dictionary<string, RSCKEPercentageRange> ranges, string potential, out double min, out double max)
+        /// <returns>The matching configured percentage range, or null if no matching range was found.</returns>
+        private RSCKEPercentageRange GetRange(
+            Dictionary<string, RSCKEPercentageRange> ranges,
+            string potential)
         {
-            min = 0.0;
-            max = 0.0;
-
             string normalizedPotential = NormalizePotentialName(potential);
 
             if (string.IsNullOrEmpty(normalizedPotential))
-                return false;
+                return null;
 
-            if (!ranges.TryGetValue(normalizedPotential, out RSCKEPercentageRange range) || range == null)
-                return false;
+            if (!ranges.TryGetValue(normalizedPotential, out RSCKEPercentageRange range))
+                return null;
 
-            min = range.Min;
-            max = range.Max;
-            return true;
+            return range;
         }
 
         /// <summary>

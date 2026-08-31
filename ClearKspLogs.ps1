@@ -1,7 +1,11 @@
+$scriptPath = $PSScriptRoot
+$gameDataPath = Split-Path $scriptPath -Parent
+$instancePath = Split-Path $gameDataPath -Parent
+
 $logFiles = @(
-    "C:\Users\Diogo\AppData\LocalLow\Squad\Kerbal Space Program\Player.log"
-    "K:\Games\KSP_instances\KSP_CustomPatches\KSP.log"
-    "K:\Games\KSP_instances\KSP_CustomPatches\GameData\RSCKerbalismED\KSP.log"
+    Join-Path $env:USERPROFILE "AppData\LocalLow\Squad\Kerbal Space Program\Player.log"
+    Join-Path $instancePath "KSP.log"
+    Join-Path $scriptPath "KSP.log"
 )
 
 foreach ($file in $logFiles) {
@@ -18,7 +22,7 @@ foreach ($file in $logFiles) {
     }
 }
 
-$gameExe = "K:\Games\KSP_instances\KSP_CustomPatches\KSP_x64.exe"
+$gameExe = Join-Path $instancePath "KSP_x64.exe"
 
 if (Test-Path $gameExe) {
 
@@ -37,11 +41,11 @@ else {
 Write-Host "Waiting 10 seconds for logs..." -ForegroundColor Cyan
 Start-Sleep -Seconds 10
 
-$notepadExe = "C:\Arco\Programas\Notepad++\notepad++.exe"
+$notepadExe = Join-Path $env:ProgramFiles "Notepad++\notepad++.exe"
 
 $logFilesToOpen = @(
-    "C:\Users\Diogo\AppData\LocalLow\Squad\Kerbal Space Program\Player.log"
-    "K:\Games\KSP_instances\KSP_CustomPatches\KSP.log"
+    Join-Path $env:USERPROFILE "AppData\LocalLow\Squad\Kerbal Space Program\Player.log"
+    Join-Path $instancePath "KSP.log"
 )
 
 if (Test-Path $notepadExe) {

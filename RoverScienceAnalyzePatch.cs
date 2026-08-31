@@ -14,38 +14,38 @@ namespace RSCKerbalismED
         /// <returns>The RSC analysis method.</returns>
         private static MethodBase TargetMethod()
         {
-            const string RSC_RoverScience_Member = "RoverScience.RoverScience";
-            const string RSC_Member_Method = "AnalyzeScienceSample";
-
             try
             {
-                Type roverScienceType = AccessTools.TypeByName(RSC_RoverScience_Member);
-                MethodInfo targetMethod = AccessTools.Method(roverScienceType, RSC_Member_Method);
-                Debug.Log("[RSCKerbalismED] INFO: Found RSC analysis method: " + targetMethod.DeclaringType.FullName + "." + targetMethod.Name);
+                MethodInfo targetMethod = AccessTools.Method(
+                    typeof(RoverScience.RoverScience),
+                    nameof(RoverScience.RoverScience.AnalyzeScienceSample));
+
+                Debug.Log("[RSCKerbalismED] INFO: Found RSC analysis method: " +
+                    targetMethod.DeclaringType.FullName + "." + targetMethod.Name);
+
                 return targetMethod;
             }
             catch (Exception ex)
             {
-                Debug.LogError("[RSCKerbalismED] ERROR: Could not properly obtain " + RSC_RoverScience_Member + ".");
+                Debug.LogError("[RSCKerbalismED] ERROR: Could not properly obtain RoverScience.RoverScience.AnalyzeScienceSample.");
                 Debug.LogException(ex);
                 throw;
             }
         }
 
         /// <summary>
-        /// Replaces RSC's Analyze Science button execution.
+        /// Intercepts RSC's "Analyze Science -> confirm" button execution.
         /// Returning false prevents the original RSC method from executing,
         /// since RSC attempts to use Stock's ModuleScienceContainer.
         /// </summary>
         /// <param name="__instance">The RSC RoverScience instance.</param>
         /// <returns>False to suppress the original RSC method.</returns>
-        private static bool Prefix(object __instance)
+        private static bool Prefix(RoverScience.RoverScience __instance)
         {
             try
             {
-                // Get relevant data from RSC's roverScience instance.
-                RSCKEScienceSpot scienceSpot = GetRSCScienceSpot(__instance);
-
+                // Get scienceSpot data from RSC
+                RSCKEScienceSpot scienceSpot = RSCKEHub.GetRSCScienceSpot(__instance);
                 if (scienceSpot.IsValid)
                     ProcessAnalysis(scienceSpot);
             }
@@ -55,7 +55,7 @@ namespace RSCKerbalismED
                 Debug.LogException(ex);
             }
 
-            // Suppress the rest of RSC's gameplay cycle.
+            // Suppress the original RSC method.
             return false;
         }
 
@@ -66,93 +66,56 @@ namespace RSCKerbalismED
         /// <param name="scienceSpot">The current RSC science spot.</param>
         private static void ProcessAnalysis(RSCKEScienceSpot scienceSpot)
         {
-            // Get from RSC current data
-            string actualPotential = scienceSpot.AdjustedPotentialGenerated;
-            Debug.Log("[RSCKerbalismED] INFO: RSC Science Spot Actual Potential: " + actualPotential + ".");
+            // Get RSC data and calculate the current analysis' sample mass.
+            double massRoll = GetMassRoll(scienceSpot.AdjustedPotentialGenerated);
 
-            // Get from KSP (active vessel).
+            // Get KSP data (active vessel) for sample storage and biome identification.
             Vessel vessel = FlightGlobals.ActiveVessel;
             CelestialBody body = vessel?.mainBody;
-            string bodyName = body?.name;
             string biomeName = ScienceUtil.GetExperimentBiome(body, vessel.latitude, vessel.longitude);
+
             Debug.Log("[RSCKerbalismED] INFO: Biome for building Sample (active vessel's) » Body: " +
-                bodyName + " | Biome: " + biomeName);
+                body?.name + " | Biome: " + biomeName);
 
-            // Get from RSCKE config, according to RSC current data.
-            if (!Plugin.rcskeConfig.TryGetPotentialRange(actualPotential, out double min, out double max))
-            {
-                string msg = "[RSCKerbalismED] ERROR: Couldnt find a configured ranged for category '" + actualPotential + "'.";
-                Debug.LogError(msg);
-                throw new InvalidOperationException(msg);
-            }
-            Debug.Log("[RSCKerbalismED] INFO | RSC Science Spot (final) Potential='" + actualPotential);
-
-            // Get from Kerbalism Data
+            // Get Kerbalism data based on the active vessel's situation.
             KERBALISM.SubjectData subjectData = RSCKEHub.GetKerbalismScienceSubject(vessel, body, biomeName);
             if (subjectData == null)
                 throw new InvalidOperationException("[RSCKerbalismED] ERROR: Could not obtain Kerbalism Science Subject.");
 
-            // Get RCSKE calculations
-            double massRoll = UnityEngine.Random.Range((float)min, (float)max);
-            // massRoll will determine sample mass for each analysis
-            massRoll = Math.Round(Math.Max(0.0, Math.Min(1.0, massRoll)), 1);
-            Debug.Log("[RSCKerbalismED] INFO | RSC Potential='" + actualPotential +
-                "' | Configured Range: " + FormatRangeForLog(min, max) +
-                " | RSCKE Mass Roll: " + massRoll.ToString("0.0"));
-
-            // Prepare the sample to store.
-            RSCKEScienceSample sample = RoverScienceStoragePatch.PrepareDataToStore(vessel, subjectData, massRoll);
-
-            if (sample == null)
-            {
-                Debug.Log("[RSCKerbalismED] INFO: No sample data available to store.");
-                return;
-            }
-
-            // Store the sample through Kerbalism.
-            if (!RoverScienceStoragePatch.StoreKerbalismSample(vessel, sample))
+            // Prepare and store the sample through the storage controller.
+            if (!RSCKEStorageController.StoreSample(vessel, subjectData, massRoll))
                 throw new InvalidOperationException("[RSCKerbalismED] ERROR: Kerbalism sample storage failed.");
         }
 
         /// <summary>
-        /// Retrieves RSC's current ScienceSpot from the RoverScience instance.
+        /// Determines the sample mass roll from the current RSC science spot
+        /// potential and the configured RSC potential range.
         /// </summary>
-        /// <param name="roverScienceInstance">The RSC RoverScience instance.</param>
-        /// <returns>The current RSC science spot.</returns>
-        private static RSCKEScienceSpot GetRSCScienceSpot(object roverScienceInstance)
+        /// <param name="potential">The RSC potential category.</param>
+        /// <returns>The calculated sample mass roll.</returns>
+        private static double GetMassRoll(string potential)
         {
-            // Get Rover Member.
-            Type roverScienceType = roverScienceInstance.GetType();
-            FieldInfo roverField = AccessTools.Field(roverScienceType, "rover");
-            object rover = roverField?.GetValue(roverScienceInstance);
+            Debug.Log("[RSCKerbalismED] INFO: RSC Science Spot (final) Potential='" + potential);
 
-            if (rover == null)
-                Debug.LogError("[RSCKerbalismED] ERROR: RSC rover instance is null.");
+            // Get from RSCKE config, according to RSC current data.
+            RSCKEPercentageRange range = Plugin.rcskeConfig.GetPotentialRange(potential);
 
-            // Get Rover's Science Spot Member.
-            Type roverType = rover.GetType();
-            FieldInfo scienceSpotField = AccessTools.Field(roverType, "scienceSpot");
-            object scienceSpot = scienceSpotField?.GetValue(rover);
+            if (range == null)
+            {
+                string msg = "[RSCKerbalismED] ERROR: Couldnt find a configured ranged for category '" + potential + "'.";
+                Debug.LogError(msg);
+                throw new InvalidOperationException(msg);
+            }
 
-            if (scienceSpot == null)
-                Debug.LogError("[RSCKerbalismED] ERROR: RSC scienceSpot instance is null.");
+            // massRoll will determine sample mass for each analysis.
+            double massRoll = UnityEngine.Random.Range((float)range.Min, (float)range.Max);
+            massRoll = Math.Round(Math.Max(0.0, Math.Min(1.0, massRoll)), 1);
 
-            // Build our object to work with.
-            RSCKEScienceSpot returningSpot = new(scienceSpot);
-            Debug.Log("[RSCKerbalismED] INFO: Science Spot Data obtained: " + returningSpot + ".");
-            return returningSpot;
+            Debug.Log("[RSCKerbalismED] INFO | RSC Potential='" + potential +
+                "' | Configured Range: " + range.ToPercentageString() +
+                " | RSCKE Mass Roll: " + massRoll.ToString("0.0"));
+
+            return massRoll;
         }
-
-        /// <summary>
-        /// Formats a fractional range as percentages for logging.
-        /// </summary>
-        /// <param name="min">The minimum fractional value.</param>
-        /// <param name="max">The maximum fractional value.</param>
-        /// <returns>The formatted percentage range.</returns>
-        private static string FormatRangeForLog(double min, double max)
-        {
-            return (min * 100.0).ToString("0.##") + "%-" + (max * 100.0).ToString("0.##") + "%";
-        }
-
     }
 }

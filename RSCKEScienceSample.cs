@@ -7,9 +7,10 @@ namespace RSCKerbalismED
         internal double Mass { get; }
 
         /// <summary>
-        /// A class to represent a "Kerbalism sample".
+        /// RSCKE representation of a "Kerbalism sample".
+        /// strictly with the data RSCKE needs to store a Sample.
         /// </summary>
-        /// <param name="subjectData">The Kerbalism subject receiving the sample.</param>
+        /// <param name="subjectData">The Kerbalism subject of the sample.</param>
         /// <param name="dataAmount">The amount of Kerbalism data in MB.</param>
         /// <param name="mass">The physical sample mass in tons.</param>
         internal RSCKEScienceSample(

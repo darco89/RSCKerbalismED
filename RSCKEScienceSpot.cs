@@ -1,60 +1,41 @@
-using System.Reflection;
-using HarmonyLib;
+using RoverScience;
 
 namespace RSCKerbalismED
 {
-    // TOOD: clean up whatever was used just for logging (understand RSC)
     internal sealed class RSCKEScienceSpot
     {
+        // TODO: Leave only the RSC ScienceSpot fields that are actually required by RSCKE.
+        internal bool IsValid { get; }
         internal string Potential { get; }
         internal string PotentialGenerated { get; }
         internal string PredictedSpot { get; }
         internal string PotentialScience { get; }
-
-        // AdjustedPotentialGenerated is the field RSCKE will use to determine sample's "mass roll range"
+        // NOTE: AdjustedPotentialGenerated is the value RSCKE uses to determine the sample's mass roll range.
         internal string AdjustedPotentialGenerated { get; }
 
-        internal bool IsValid { get; }
-
         /// <summary>
-        /// RSCKE representation of the original RSC's scienceSpot object (relevant data only).
-        /// NOTE: We are currently only using AdjustedPotentialGenerated. The rest was just useful at some point.
+        /// RSCKE representation of an RSC ScienceSpot.
+        /// strictly with the data RSCKE needs to create a Sample.
         /// </summary>
-        /// <param name="scienceSpot">The RSC scienceSpot object obtained from RoverScience.</param>
-        internal RSCKEScienceSpot(object scienceSpot)
+        /// <param name="scienceSpot">The RSC ScienceSpot object.</param>
+        internal RSCKEScienceSpot(ScienceSpot scienceSpot)
         {
             IsValid = false;
-
             if (scienceSpot == null)
                 return;
 
-            System.Type scienceSpotType = scienceSpot.GetType();
-            Potential = GetFieldValue(scienceSpotType, scienceSpot, "potential");
-            PotentialGenerated = GetFieldValue(scienceSpotType, scienceSpot, "potentialGenerated");
-            AdjustedPotentialGenerated = GetFieldValue(scienceSpotType, scienceSpot, "adjustedPotentialGenerated");
-            PredictedSpot = GetFieldValue(scienceSpotType, scienceSpot, "predictedSpot");
-            PotentialScience = GetFieldValue(scienceSpotType, scienceSpot, "potentialScience");
+            Potential = scienceSpot.potential.ToString();
+            PotentialGenerated = scienceSpot.potentialGenerated;
+            AdjustedPotentialGenerated = scienceSpot.adjustedPotentialGenerated;
+            PredictedSpot = scienceSpot.predictedSpot;
+            PotentialScience = scienceSpot.potentialScience.ToString(); // int
 
+            // simple validation
             IsValid = Potential != null &&
                       PotentialGenerated != null &&
                       AdjustedPotentialGenerated != null &&
                       PredictedSpot != null &&
                       PotentialScience != null;
-        }
-
-        /// <summary>
-        /// Gets a value from an RSC scienceSpot field.
-        /// </summary>
-        /// <param name="scienceSpotType">The runtime type of the RSC scienceSpot object.</param>
-        /// <param name="scienceSpot">The RSC scienceSpot object.</param>
-        /// <param name="fieldName">The name of the RSC field to retrieve.</param>
-        /// <returns>The value corresponding to fieldName, or null if the field or value cannot be found.</returns>
-        private string GetFieldValue(System.Type scienceSpotType, object scienceSpot, string fieldName)
-        {
-            FieldInfo field = AccessTools.Field(scienceSpotType, fieldName);
-            object value = field?.GetValue(scienceSpot);
-
-            return value?.ToString();
         }
 
         /// <summary>

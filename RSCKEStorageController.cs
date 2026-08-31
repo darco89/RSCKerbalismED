@@ -29,7 +29,7 @@ internal static class RSCKEStorageController
     /// </summary>
     /// <param name="vessel">The active vessel containing the sample storage.</param>
     /// <param name="subjectData">The Kerbalism subject receiving the sample.</param>
-    /// <param name="massRoll">The RSC mass roll used to determine the sample mass.</param>
+    /// <param name="massRoll">RSCKE roll used to determine the sample mass.</param>
     /// <returns>The prepared sample, or null if no sample can be stored.</returns>
     private static RSCKEScienceSample PrepareDataToStore(
         Vessel vessel,

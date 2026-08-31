@@ -11,5 +11,10 @@
 
 | Issue | Notes |
 |---|---|
-| Experiment not listed here | RSC part roverBrain still uses old Experiment Id.|
+| Experiment not listed on "Vessel Pane" | RSC part roverBrain still uses old Experiment Id.|
 
+## Situation: RoverBrain Terminal GUI
+
+| Issue | Notes |
+|---|---|
+| Generate new GUI/screen for sample obtained result | Priority at the moment |
