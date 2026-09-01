@@ -41,30 +41,41 @@ else {
 Write-Host "Waiting 10 seconds for logs..." -ForegroundColor Cyan
 Start-Sleep -Seconds 10
 
-$notepadExe = Join-Path $env:ProgramFiles "Notepad++\notepad++.exe"
+$notepadShortcut = Join-Path $env:USERPROFILE "Desktop\KSP Logs.lnk"
 
 $logFilesToOpen = @(
     Join-Path $env:USERPROFILE "AppData\LocalLow\Squad\Kerbal Space Program\Player.log"
     Join-Path $instancePath "KSP.log"
 )
 
-if (Test-Path $notepadExe) {
+if (Test-Path $notepadShortcut) {
 
-    Write-Host "Opening logs in Notepad++..." -ForegroundColor Cyan
+    $shell = New-Object -ComObject WScript.Shell
+    $shortcut = $shell.CreateShortcut($notepadShortcut)
+    $notepadExe = $shortcut.TargetPath
 
-    foreach ($file in $logFilesToOpen) {
+    if (Test-Path $notepadExe) {
 
-        if (Test-Path $file) {
+        Write-Host "Opening logs in Notepad++..." -ForegroundColor Cyan
 
-            Start-Process -FilePath $notepadExe -ArgumentList "`"$file`""
+        foreach ($file in $logFilesToOpen) {
+
+            if (Test-Path $file) {
+
+                Start-Process -FilePath $notepadExe -ArgumentList "`"$file`""
+            }
+            else {
+
+                Write-Host "Log not found: $file" -ForegroundColor Yellow
+            }
         }
-        else {
+    }
+    else {
 
-            Write-Host "Log not found: $file" -ForegroundColor Yellow
-        }
+        Write-Host "Shortcut target not found: $notepadExe" -ForegroundColor Red
     }
 }
 else {
 
-    Write-Host "Notepad++ executable not found: $notepadExe" -ForegroundColor Red
+    Write-Host "Notepad++ shortcut not found: $notepadShortcut" -ForegroundColor Red
 }

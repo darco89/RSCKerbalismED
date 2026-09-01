@@ -6,8 +6,13 @@ using HarmonyLib;
 
 namespace RSCKerbalismED;
 
+/// <summary>
+/// Patch to safely handle RSC's method DrawRoverConsoleGUI()
+/// since it tries to access Stock's ModuleScienceContainer
+/// which doesn't exist on a Kerbalism playthrough
+/// </summary>
 [HarmonyPatch]
-internal static class RoverScienceGuiPatch
+internal static class PatchRSCTerminalDrawGUI
 {
     /// <summary>
     /// Finds the RSC DrawRoverConsoleGUI method to patch.
@@ -43,8 +48,8 @@ internal static class RoverScienceGuiPatch
     /// <returns>The patched method instructions.</returns>
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        MethodInfo safeGetStoredDataCount = AccessTools.Method(typeof(RoverScienceGuiPatch), nameof(SafeGetStoredDataCount));
-        MethodInfo safeGetCapacity = AccessTools.Method(typeof(RoverScienceGuiPatch), nameof(SafeGetCapacity));
+        MethodInfo safeGetStoredDataCount = AccessTools.Method(typeof(PatchRSCTerminalDrawGUI), nameof(SafeGetStoredDataCount));
+        MethodInfo safeGetCapacity = AccessTools.Method(typeof(PatchRSCTerminalDrawGUI), nameof(SafeGetCapacity));
 
         bool getStoredDataCountPatched = false;
         bool capacityPatched = false;

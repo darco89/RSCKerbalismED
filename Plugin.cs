@@ -2,37 +2,36 @@ using System;
 using HarmonyLib;
 using UnityEngine;
 
-namespace RSCKerbalismED
+namespace RSCKerbalismED;
+
+[KSPAddon(KSPAddon.Startup.Instantly, true)]
+public class Plugin : MonoBehaviour
 {
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class Plugin : MonoBehaviour
+    private const string HarmonyId = "RSCKerbalismED";
+
+    internal static RSCKEConfig RcskeConfig { get; private set; }
+
+    /// <summary>
+    /// Initializes RSCKerbalismED and loads the configuration once.
+    /// </summary>
+    private void Awake()
     {
-        private const string HarmonyId = "RSCKerbalismED";
+        DontDestroyOnLoad(gameObject);
+        Debug.Log("[RSCKerbalismED] INFO: Initializing.");
 
-        internal static RSCKEConfig rcskeConfig { get; private set; }
-
-        /// <summary>
-        /// Initializes RSCKerbalismED and loads the configuration once.
-        /// </summary>
-        private void Awake()
+        try
         {
-            DontDestroyOnLoad(gameObject);
-            Debug.Log("[RSCKerbalismED] INFO: Initializing.");
+            RcskeConfig = new RSCKEConfig();
+            RcskeConfig.Load();
 
-            try
-            {
-                rcskeConfig = new RSCKEConfig();
-                rcskeConfig.Load();
-
-                var harmony = new Harmony(HarmonyId);
-                harmony.PatchAll();
-                Debug.Log("[RSCKerbalismED] INFO: Harmony patches applied.");
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("[RSCKerbalismED] ERROR: Failed to initialize.");
-                Debug.LogException(ex);
-            }
+            var harmony = new Harmony(HarmonyId);
+            harmony.PatchAll();
+            Debug.Log("[RSCKerbalismED] INFO: Harmony patches applied.");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("[RSCKerbalismED] ERROR: Failed to initialize.");
+            Debug.LogException(ex);
         }
     }
 }
