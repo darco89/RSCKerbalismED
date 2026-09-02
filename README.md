@@ -63,13 +63,13 @@ A compatibility mod that brings **Rover Science Continued** experiments to **Ker
 # 🟡 WHAT ELSE
 </br>
 
-See [BACKLOG.md](BACKLOG.md) for current issues, planned improvements, and ideas.
+See [BACKLOG.md](Backlog.md) for current issues, planned improvements, and ideas.
 </br>
 
-See [ABOUT.md](ABOUT.md) for project information, development notes, contributions, and contact information.
+See [ABOUT.md](about.md) for project information, development notes, contributions, and contact information.
 </br>
 
-See [License.md](LICENSE.md) for license information
+See [License](LICENSE) for license information
 </br>
 
 Enjoy the mod! 🚀
