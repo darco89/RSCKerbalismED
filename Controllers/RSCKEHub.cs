@@ -8,7 +8,6 @@ namespace RSCKerbalismED;
 /// </summary>
 internal static class RSCKEHub
 {
-
     /// <summary>
     /// Gets the Kerbalism SubjectData for our experiment
     /// </summary>
