@@ -11,7 +11,7 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 | **Full Name** | RoverScience Continued — Kerbalism Edition |
 | **Short Name** | RSCKE |
 | **RSCKE General Settings** | RSCKerbalismED.cfg |
-| **Kerbalism Experiment Config** | RSCKerbalismED_Experiment.cfg |
+| **Kerbalism Experiment Config** | RSCK_RoverBrain_Experiment.cfg |
 | **C# Namespace** | `RSCKerbalismED` |
 | **Harmony ID** | `RSCKerbalismED` |
 | **Log Prefix** | [RSCKerbalismED] |
@@ -24,12 +24,12 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 </br>
 
 ### 📡 **RSC ↔ Kerbalism Integration** - *Compatibility and Configurability* </br>
-**»** RSCKE safely handles RSC calls to Stock's `ModuleScienceContainer`, preventing errors </br>
 **»** RSC `RoverBrain` parts now perform *Analysis* of a `Kerbalism Experiment` (configurable) </br>
-**»** RSC `ScienceAnalysis` is altered in order to use `Kerbalism Storage` </br>
-**»** Uses RSC `ScienceSpot.Potentials` (but not only) to calculate each sample volume </br>
-**»** Configurable relation between `ScienceSpot.Potentials` and Experiment `SampleMass` </br>
-**»** Seamless integration with Kerbalism's **Science Archive** and **Vessels** `LaunchApps` features </br>
+**»** **RSCKE** safely handles `RSC` calls to Stock's `ModuleScienceContainer`, preventing errors </br>
+**»** RSC `ScienceAnalysis` operation is intercepted by RSCKE which will create a Sample </br>
+**»** **RSCKE** provides sample mass calculation based on `RSC` and delegates storage to `Kerbalism` </br>
+**»** Configurable relation between `RSC ScienceSpot.Potentials` and `SampleMass` gathered </br>
+**»** Seamless integration with `Kerbalism's `**Science Archive** and **Vessels** `LaunchApps` features </br>
 </br>
 
 ### 🧬 **Keeps the Best of RSC's gameplay** - *Adapted Sample Gathering Logic*  </br>

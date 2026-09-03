@@ -11,31 +11,33 @@ namespace RSCKerbalismED;
 /// </summary>
 public class RSCKEConfig
 {
-
-    public const string RSCKE_EXPERIMENT_ID = "RSCKerbalismED";
-    private const string RSCKE_CONF_SETTINGS = "RSCKERBALISMED_SETTINGS";
-    private const string RSCKE_CONF_CATEGORIES_RANGES = "RSCCATEGORIES_RSCKERANGES";
-
+    public readonly string ModDir = Path.Combine(KSPUtil.ApplicationRootPath, "GameData", RSCKEConstants.HARMONY_ID);
     // Dictionary of ranges per RSC category (ex: categoryKey[min, max] or vlow[0.1, 0.3])
     private readonly Dictionary<string, RSCKEPercentageRange> potentialRanges = new(StringComparer.OrdinalIgnoreCase);
+
+
+    public RSCKEConfig()
+    {
+        Load();
+    }
 
     /// <summary>
     /// Loads RSCKerbalismED configuration once and initializes all configured values.
     /// </summary>
-    internal void Load()
+    private void Load()
     {
         try
         {
             // get config file
-            string configPath = Path.Combine(KSPUtil.ApplicationRootPath, "GameData", "RSCKerbalismED", "RSCKerbalismED.cfg");
-            Debug.Log("[RSCKerbalismED] INFO: Loading Configuration file from " + configPath);
+            string configFilePath = Path.Combine(ModDir, "Config", "RSCKerbalismED.cfg");
+            RSCKELogger.Info("Loading Configuration file from " + configFilePath);
 
             // load and populate potentialRanges
-            LoadKRSCCategoriesRanges(ConfigNode.Load(configPath));
+            LoadKRSCCategoriesRanges(ConfigNode.Load(configFilePath));
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            Debug.LogError("[RSCKerbalismED] ERROR: Couldn't obtain own configuration correctly.");
+            RSCKELogger.Error("Couldn't obtain own configuration correctly.", ex);
             throw;
         }
     }
@@ -49,9 +51,9 @@ public class RSCKEConfig
     private void LoadKRSCCategoriesRanges(ConfigNode root)
     {
         // general settings node
-        ConfigNode settings = root.GetNode(RSCKE_CONF_SETTINGS);
+        ConfigNode settings = root.GetNode(RSCKEConstants.CONF_NODE_SETTINGS);
         // ranges definitions per RSC "category" node
-        ConfigNode categories = settings.GetNode(RSCKE_CONF_CATEGORIES_RANGES);
+        ConfigNode categories = settings.GetNode(RSCKEConstants.CONF_NODE_CATEGORIES_RANGES);
 
         foreach (ConfigNode node in categories.nodes)
         {
@@ -117,6 +119,11 @@ public class RSCKEConfig
         return fallback;
     }
 
+    public Dictionary<string, RSCKEPercentageRange> GetPotentialRanges()
+    {
+        return this.potentialRanges;
+    }
+
     /// <summary>
     /// Gets the configured range for an actual RSC potential category.
     /// The lookup key is the exact RSC category name configured in Name,
@@ -124,7 +131,7 @@ public class RSCKEConfig
     /// </summary>
     /// <param name="potential">The actual RSC potential category returned by RSC.</param>
     /// <returns>The configured percentage range, or null if no matching range was found.</returns>
-    internal RSCKEPercentageRange GetPotentialRange(string potential)
+    public RSCKEPercentageRange GetPotentialRange(string potential)
     {
         return GetRange(potentialRanges, potential);
     }

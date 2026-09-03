@@ -2,17 +2,17 @@ using System.Globalization;
 
 namespace RSCKerbalismED;
 
-internal sealed class RSCKEPercentageRange
+public class RSCKEPercentageRange
 {
-    internal double Min;
+    public double Min;
 
-    internal double Max;
+    public double Max;
 
     /// <summary>
     /// Returns the range formatted as percentages.
     /// </summary>
     /// <returns>The formatted percentage range.</returns>
-    internal string ToPercentageString()
+    public string ToPercentageString()
     {
         return (Min * 100.0).ToString("0.##", CultureInfo.InvariantCulture) + "%-" +
             (Max * 100.0).ToString("0.##", CultureInfo.InvariantCulture) + "%";
