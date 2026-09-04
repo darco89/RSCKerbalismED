@@ -4,8 +4,8 @@
 
 A compatibility mod that brings [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) experiments to [**Kerbalism**](https://github.com/Kerbalism/Kerbalism). **RSCKE** brings the necessary bundle for seamless compatibility, Science balancing and UI enrichment between RSC and Kerbalism.
 
-| | |
-|---|---|
+| Project Details| |
+|:---|:---|
 | **Project / Mod Name** | RSCKerbalismED |
 | **License** | [Unlicense](https://unlicense.org/) |
 | **Full Name** | RoverScience Continued — Kerbalism Edition |
@@ -16,19 +16,21 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 | **Harmony ID** | `RSCKerbalismED` |
 | **Log Prefix** | [RSCKerbalismED] |
 
-></br>**🔗 RSCKE Dependencies**</br></br> - [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) — RSC provides the rover-based ScienceSpot discovery and sample-gathering gameplay that RSCKE integrates with Kerbalism.</br> - [**Kerbalism**](https://github.com/Kerbalism/Kerbalism) — Kerbalism provides the Science Experiment, Science Storage and related systems used by RSCKE. </br></br> Note: This mod alone provides no parts nor functionalities.
+></br>**🔗 RSCKE Dependencies**</br></br> - [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) — RSC provides the rover-based ScienceSpot discovery and sample-gathering gameplay that RSCKE integrates with Kerbalism.</br> - [**Kerbalism**](https://github.com/Kerbalism/Kerbalism) — Kerbalism provides the Science Experiment, Science Storage and related systems used by RSCKE. </br>
 
-</br>Adding `RSC` and `RSCKE` to your current `Kerbalism` run, should be smooth and error-free. 
+</br>Adding `RSC` and `RSCKE` to your current `Kerbalism` run, should be smooth and error-free. </br>
+
+Note: This mod alone provides no parts nor functionalities.
 </br></br>
 # 🟢 WHAT IT IS
 </br>
 
 ### 📡 **RSC ↔ Kerbalism Integration** - *Compatibility and Configurability* </br>
-**»** RSC `RoverBrain` parts now perform *Analysis* of a `Kerbalism Experiment` (configurable) </br>
-**»** **RSCKE** safely handles `RSC` calls to Stock's `ModuleScienceContainer`, preventing errors </br>
-**»** RSC `ScienceAnalysis` operation is intercepted by RSCKE which will create a Sample </br>
+**»** **RSC** `RoverBrain` parts now perform *Analysis* of a `Kerbalism Experiment` (configurable) </br>
+**»** **RSCKE** safely handles `RSC` calls to **Stock's** `ModuleScienceContainer`, preventing errors </br>
+**»** **RSC** `ScienceAnalysis` operation is intercepted by **RSCKE** which creates `Kerbalism samples` </br>
 **»** **RSCKE** provides sample mass calculation based on `RSC` and delegates storage to `Kerbalism` </br>
-**»** Configurable relation between `RSC ScienceSpot.Potentials` and `SampleMass` gathered </br>
+**»** Configurable relation between **RSC** `ScienceSpot.Potentials` and  Science yield </br>
 **»** Seamless integration with `Kerbalism's `**Science Archive** and **Vessels** `LaunchApps` features </br>
 </br>
 
@@ -53,10 +55,10 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 # 🔴 WHAT IT IS NOT
 </br>
 
-###  🛰️ **RSCKE is NOT standalone** </br>
+###  **RSCKE is NOT standalone** </br>
 **»** This mod is only meant to be added to playthroughs with both RSC and Kerbalism </br>
 </br>
-### 🛰️ **RSCKE does not include patches for anything else and it never will** </br>
+### **RSCKE does not patch anything other than RSC** </br>
 **»** Suggestions for changes are welcome, but they must remain in scope (RSC <-> Kerbalism relationship) </br>
 
 </br>
@@ -64,10 +66,10 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 # 🟡 WHAT ELSE
 </br>
 
-See [BACKLOG.md](Backlog.md) for current issues, planned improvements, and ideas.
+See [BACKLOG.md](Backlog.md) for current issues, planned improvements and ideas.
 </br>
 
-See [ABOUT.md](about.md) for project information, development notes, contributions, and contact information.
+See [ABOUT.md](about.md) for project information, development notes, contributions and contact information.
 </br>
 
 See [License](LICENSE) for license information

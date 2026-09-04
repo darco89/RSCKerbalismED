@@ -12,7 +12,6 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <AssemblyVersion>0.1.0.0</AssemblyVersion>
     <FileVersion>0.1.0.0</FileVersion>
-
     <OutputPath>$(MSBuildThisFileDirectory)Plugins\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
@@ -34,6 +33,11 @@
       <Private>False</Private>
     </Reference>
 
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\KSP_x64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
     <!-- Harmony 2 -->
     <Reference Include="0Harmony">
       <HintPath>..\000_Harmony\0Harmony.dll</HintPath>
@@ -52,4 +56,5 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+
 </Project>

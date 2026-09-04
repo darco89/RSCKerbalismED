@@ -34,7 +34,5 @@ public class Plugin : MonoBehaviour
             harmony?.UnpatchAll(HarmonyId);
             RSCKELogger.Error("Failed to initialize patches.", ex);
         }
-
-
     }
 }

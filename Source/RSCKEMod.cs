@@ -19,7 +19,8 @@ internal static class RSCKEMod
     {
         RSCKELogger.Info("Loading configs.");
         Config = new RSCKEConfig();
-        RSCKELogger.Info("Initializing Tracker.");
+        RSCKELogger.Info("Loading Tracker.");
         Tracker = new RSCKETracker();
+        RSCKELogger.Info("RSCKerbalismED initialized.");
     }
 }

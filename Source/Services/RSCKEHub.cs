@@ -21,7 +21,7 @@ public static class RSCKEHub
         try
         {
             // KSP data (KSP.CelestialBody.biomemap[biomeName].id)
-            int biomeIndex = FindBiomeIndex(body, biomeName);
+            int biomeIndex = GetBiomeIndex(body, biomeName);
             if (biomeIndex >= 0)
             {
                 KERBALISM.ExperimentInfo experimentInfo = KERBALISM.ScienceDB.GetExperimentInfo(experimentId);
@@ -101,7 +101,7 @@ public static class RSCKEHub
     /// <param name="body">The KSP celestial body containing the biome.</param>
     /// <param name="biomeName">The biome name to find.</param>
     /// <returns>The biome index if found; otherwise -1.</returns>
-    public static int FindBiomeIndex(CelestialBody body, string biomeName)
+    public static int GetBiomeIndex(CelestialBody body, string biomeName)
     {
         int biomeIdx = -1;
         for (int i = 0; i < body.BiomeMap.Attributes.Length; i++)

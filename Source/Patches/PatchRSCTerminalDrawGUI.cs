@@ -3,126 +3,56 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using static RSCKerbalismED.RSCKELogger;
 
 namespace RSCKerbalismED;
 
 /// <summary>
-/// Patch to safely handle RSC's method DrawRoverConsoleGUI()
-/// since it tries to access Stock's ModuleScienceContainer
-/// which doesn't exist on a Kerbalism playthrough
+/// Harmony patch for RSC's DrawRoverConsoleGUI() method.
+/// Provides the Harmony-facing transpiler and delegates all patch logic to RSCKEPatchTerminalDrawGui.
 /// </summary>
 [HarmonyPatch]
-internal static class PatchRSCTerminalDrawGUI
+internal static class PatchRSCTerminalDrawGui
 {
+    private const string rscType = "RoverScience.RoverScienceGUI";
+    private const string rscMethod = "DrawRoverConsoleGUI";
+
     /// <summary>
     /// Finds the RSC DrawRoverConsoleGUI method to patch.
     /// </summary>
     /// <returns>The RSC GUI method, or null if it cannot be found.</returns>
     private static MethodBase TargetMethod()
     {
-        Type guiType = AccessTools.TypeByName("RoverScience.RoverScienceGUI");
-
+        Type guiType = AccessTools.TypeByName(rscType);
         if (guiType == null)
         {
-            UnityEngine.Debug.LogError("[RSCKerbalismED] ERROR: Could not find RoverScience.RoverScienceGUI.");
+            RSCKELogger.Error("PatchRSCTerminalDrawGui - Could not find RoverScience.RoverScienceGUI.");
             return null;
         }
 
-        MethodInfo method = AccessTools.Method(guiType, "DrawRoverConsoleGUI");
-
+        MethodInfo method = AccessTools.Method(guiType, rscMethod);
         if (method == null)
         {
-            UnityEngine.Debug.LogError("[RSCKerbalismED] ERROR: Could not find RoverScienceGUI.DrawRoverConsoleGUI.");
+            RSCKELogger.Error("PatchRSCTerminalDrawGui - Could not find RoverScienceGUI.DrawRoverConsoleGUI.");
             return null;
         }
 
-        UnityEngine.Debug.Log("[RSCKerbalismED] Found RSC GUI method: " + method.DeclaringType.FullName + "." + method.Name);
-
+        RSCKELogger.Info("Found RSC GUI method: " + method.DeclaringType.FullName + "." + method.Name);
         return method;
     }
 
     /// <summary>
-    /// Replaces direct ModuleScienceContainer access with safe wrapper methods.
+    /// Passes each RSC GUI instruction through a single RSCKE patching session.
     /// </summary>
     /// <param name="instructions">The original method instructions.</param>
     /// <returns>The patched method instructions.</returns>
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        MethodInfo safeGetStoredDataCount = AccessTools.Method(typeof(PatchRSCTerminalDrawGUI), nameof(SafeGetStoredDataCount));
-        MethodInfo safeGetCapacity = AccessTools.Method(typeof(PatchRSCTerminalDrawGUI), nameof(SafeGetCapacity));
-
-        bool getStoredDataCountPatched = false;
-        bool capacityPatched = false;
+        RSCKEPatcherTerminalDrawGUI patcher = new RSCKEPatcherTerminalDrawGUI();
 
         foreach (CodeInstruction instruction in instructions)
-        {
-            if (instruction.opcode == OpCodes.Callvirt &&
-                instruction.operand is MethodInfo method &&
-                method.Name == "GetStoredDataCount" &&
-                method.DeclaringType == typeof(ModuleScienceContainer))
-            {
-                yield return new CodeInstruction(OpCodes.Call, safeGetStoredDataCount);
+            yield return patcher.ProcessInstruction(instruction);
 
-                getStoredDataCountPatched = true;
-                continue;
-            }
-
-            if (instruction.opcode == OpCodes.Ldfld &&
-                instruction.operand is FieldInfo field &&
-                field.Name == "capacity" &&
-                field.DeclaringType == typeof(ModuleScienceContainer))
-            {
-                yield return new CodeInstruction(OpCodes.Call, safeGetCapacity);
-
-                capacityPatched = true;
-                continue;
-            }
-
-            yield return instruction;
-        }
-
-        if (getStoredDataCountPatched)
-        {
-            UnityEngine.Debug.Log("[RSCKerbalismED] Patched ModuleScienceContainer.GetStoredDataCount().");
-        }
-        else
-        {
-            UnityEngine.Debug.LogError("[RSCKerbalismED] ERROR: Could not find ModuleScienceContainer.GetStoredDataCount().");
-        }
-
-        if (capacityPatched)
-        {
-            UnityEngine.Debug.Log("[RSCKerbalismED] Patched ModuleScienceContainer.capacity.");
-        }
-        else
-        {
-            UnityEngine.Debug.LogError("[RSCKerbalismED] ERROR: Could not find ModuleScienceContainer.capacity.");
-        }
-    }
-
-    /// <summary>
-    /// Safely gets the number of stored science data entries.
-    /// </summary>
-    /// <param name="container">The science container.</param>
-    /// <returns>The number of stored entries, or zero if the container is null.</returns>
-    private static int SafeGetStoredDataCount(ModuleScienceContainer container)
-    {
-        if (container == null)
-            return 0;
-
-        return container.GetStoredDataCount();
-    }
-
-    /// <summary>
-    /// Safely gets the science container capacity.
-    /// </summary>
-    /// <param name="container">The science container.</param>
-    /// <returns>The container capacity, or zero if the container is null.</returns>
-    private static int SafeGetCapacity(ModuleScienceContainer container)
-    {
-        if (container == null)
-            return 0;
-
-        return container.capacity;
+        patcher.LogResults();
     }
 }

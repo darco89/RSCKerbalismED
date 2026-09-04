@@ -1,12 +1,21 @@
 # RSCKerbalismED — Backlog
 
 
+### General issues
+| Issue | Notes | Status |
+|---|---|---|
+| After confirming and storing sample, reset Science Spot | despawn dome and ROC | For 1st release |
+| Remove RSC outputs for ScienceDecay - its not used  | For 1st release |
+| RSC considers KSP Localization | consider those | For 1st release |
+| Add PT/BR Localization | nice to have | 2nd release |
+
+
 ### Situation: RoverBrain Terminal GUI
 
 | Issue | Notes | Status |
 |---|---|---|
+| Review buttons Upgrade, Reset | integration | For 1st release |
 | Terminal keeps running even after losing vessel's Full Control | RSC bug | Fixed |
-| After confirming and storing sample, Science Spot needs to be reset | despawn dome and ROC | Priority |
 | Try to show (keep track) of how many spots were visited per biome | GUI - correction | For 1st release |
 | Try to show (keep track) of collected samples quantity and mass | GUI - new | For 1st release |
 | Show current biome and amount of mass gathered for current biome while ScienceSpot is not reached | GUI - new | For 1st release |
@@ -28,11 +37,11 @@
 </br></br>
 
 ## Other Ideas for RSCKE 
-> These are a few ideas that I talked about with a few people. Feasibility was not assessed and therefore they remain "ideas".
+> Just ideas that were discussed with a few people. Feasibility was not assessed.
 
-- Compatibility with RP-1
+- Compatibility with RP-1 / RO / RSS
 
-- Compatibility with `ProbeControlRoom` and `RasterPropMonitor` (maybe control Rover from Mission Control and control experiment via MFDs)
+- Compatibility with `ProbeControlRoom` and `RasterPropMonitor` (maybe control Rover from Mission Control and control experiment via MFDs. Or maybe, even, have the Rover Terminal itself in MFDs)
 
 - Allow configurable Energy Consumption for `RoverBrain` parts
 
@@ -41,10 +50,10 @@
 
 
 ## RSCKE ideas for other mods
+> Just ideas that were discussed with a few people. Feasibility was not assessed".
 
 - For now I can only think of `Tarsier Space Technology with Galaxies Continued`.
  That mod has a few telescopes that can gather science from photos. Seems like the same case, but with Transmissable Data instead of Samples.
-> These are a few ideas that I talked about with a few people. Feasibility was not assessed and therefore they remain "ideas".
 
 </br>
 
