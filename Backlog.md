@@ -1,5 +1,13 @@
 # RSCKerbalismED — Backlog
 
+</br>
+
+Please reach out if you stumble upon any issue that is not listed here, or if you have more ideas that could be implemented in RSCKE. 
+
+Thanks for your help everyone!
+
+
+> Most things achieved during "proof of concept" phase are not listed here as they are already implemented or under active development. This list helps me not to forget issues already identified.
 
 ### General Pending Issues
 

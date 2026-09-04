@@ -1,12 +1,16 @@
 # Rover Science Continued — Kerbalism Edition
 
->### **RSCKerbalismED (RSCKE) - A KSP Mod**
 
-A compatibility mod that brings [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) experiments to [**Kerbalism**](https://github.com/Kerbalism/Kerbalism). **RSCKE** brings the necessary bundle for compatibility, Science balancing configurations and UI enrichment for playthroughs with RSC and Kerbalism. 
+A KSP compatibility **mod** that brings [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) experiments to [**Kerbalism**](https://github.com/Kerbalism/Kerbalism). **RSCKE** brings the necessary bundle for compatibility, Science balancing configurations and UI enrichment for playthroughs with RSC and Kerbalism. 
 
->RSC Science Analysis will produce the new RSCKE Experiment Samples to be stored in a Kerbalism Drive. Experiment was defined by having the famous "Surface Sample" has a baseline. </br>
+> #### **RSCKerbalismED (RSCKE)**
 
-| Project Details||
+**RSC** Science *Analysis* will produce the new **RSCKE** Experiment *Samples* to be stored in a **Kerbalism** Drive. Experiment was defined having *Surface Sample* as a baseline. </br>
+
+---
+
+### Project Details
+| | |
 |:---|:---|
 | **Project / Mod Name** | RSCKerbalismED |
 | **License** | [Unlicense](https://unlicense.org/) |
@@ -20,10 +24,16 @@ A compatibility mod that brings [**Rover Science Continued**](https://github.com
 
 ></br>**🔗 RSCKE Dependencies**</br></br> - [**Rover Science Continued**](https://github.com/linuxgurugamer/RoverScience-Continued) — RSC provides the rover-based ScienceSpot discovery and sample-gathering gameplay that RSCKE integrates with Kerbalism.</br> - [**Kerbalism**](https://github.com/Kerbalism/Kerbalism) — Kerbalism provides the Science Experiment, Science Storage and related systems used by RSCKE. </br>
 
+---
+</br>
 Adding `RSC` and `RSCKE` to your current `Kerbalism` run, should be smooth and error-free. </br>
 </br>
 Note: This mod alone provides no parts nor functionalities.
-</br></br>
+
+</br>
+
+---
+
 # 🟢 WHAT IT IS
 </br>
 
