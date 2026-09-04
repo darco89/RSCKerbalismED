@@ -50,7 +50,7 @@
 
 - Compatibility with `ProbeControlRoom` and `RasterPropMonitor` (maybe control Rover from Mission Control and control experiment via MFDs. Or maybe, even, have the Rover Terminal itself in MFDs)
 
-- Allow configurable Energy Consumption for `RoverBrain` parts
+- Allow configurable Energy Consumption for `RoverBrain` parts, depending on current activity (actively scanning for science spots or not).
 
 - The `Album` idea - RSC spawns objects ROC1 or ROC2 at science spots. If not too costly, maybe try to have RoverBrain parts recognize a camera in the vessel to take pictures with, when Sample is Gathered. The picture would be stored in the RoverBrain "Album" and visible in both Terminal GUI and MFDs. Too much? Oh, this could be interesting for Telescopes and Cameras in general, too.
 
