@@ -10,7 +10,7 @@ namespace RSCKerbalismED;
 /// Patches RSC's DrawRoverConsoleGUI() references to Stock ModuleScienceContainer
 /// data and capacity values with RSCKE-safe runtime wrappers.
 /// </summary>
-internal sealed class RSCKEPatchStockScience : IRSCKEPatchTerminalDrawGUI
+public class RSCKEPatchStockScience : IRSCKEPatchTerminalDrawGUI
 {
     /// <summary>
     /// Indicates that RSC's GetStoredDataCount() access was patched.

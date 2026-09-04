@@ -1,38 +1,45 @@
 # RSCKerbalismED — Backlog
 
 
-### General issues
-| Issue | Notes | Status |
-|---|---|---|
-| After confirming and storing sample, reset Science Spot | despawn dome and ROC | For 1st release |
-| Remove RSC outputs for ScienceDecay - its not used  | For 1st release |
-| RSC considers KSP Localization | consider those | For 1st release |
-| Add PT/BR Localization | nice to have | 2nd release |
+### General Pending Issues
 
+| Issue | Notes | Status |
+|:---|:---|:---|
+| After confirming and storing sample, reset Science Spot | despawn dome and ROC | For 1st release |
+| Remove RSC outputs for ScienceDecay but leave its usage for RSC | its not used by RSCKE | Done |
+| RSC considers Localization | Inestigate | After 1st |
+| RSC considers Localization - Add PT/BR Localization | nice to have | After 1st |
+| Kerbalism Drive name used for samples storage is empty. use another property | nice to have | For 1st release |
+| There's still a log mentioning 1 invalid access to ModuleScienceContainer | (maybe not RSC) | investigate |
+| Review remaining original RSC error logs and prevent them if feasible | try to stop them | investigate |
 
 ### Situation: RoverBrain Terminal GUI
 
 | Issue | Notes | Status |
-|---|---|---|
-| Review buttons Upgrade, Reset | integration | For 1st release |
-| Terminal keeps running even after losing vessel's Full Control | RSC bug | Fixed |
-| Try to show (keep track) of how many spots were visited per biome | GUI - correction | For 1st release |
-| Try to show (keep track) of collected samples quantity and mass | GUI - new | For 1st release |
-| Show current biome and amount of mass gathered for current biome while ScienceSpot is not reached | GUI - new | For 1st release |
+|:---|:---|:---|
+| Terminal keeps running even after losing vessel's Full Control | RSC bug | Done |
+| Show current biome while driving | GUI - new | For 1st release |
+| Show (keep track) of how many spots were visited per biome | GUI - correction | For 1st release |
+| Show (keep track) of collected samples quantity and their mass | GUI - new | For 1st release |
 | Generate new GUI/screen for sample obtained result | GUI - new | For 1st release |
+| Review button Reset | integration | For 1st release |
+| Review button Upgrade | integration | (investigating) |
+
 
 ### Situation: Kerbalism Science Archive
 
 | Issue | Notes | Status |
-|---|---|---|
+|:---|:---|:---|
 | Experiment not listed when filtering by current vessel | RSC part `roverBrain` still uses old Experiment Id. Parts might need to be patched| For 1st release|
-| Science points balance according to Surface Sample across biomes | Kerbalism is somehow using different values per Body | Investigate|
+| Experiment is listed but not shwoing experiment info | Config? | For 1st release|
+| Kerbalism shows Completed value "1.9x" meaning the player recovered 90% more of what Experiment limits | Science is still limited to "1x" | This is OK | 
+| Balance Science across biomes based on a single value? | Kerbalism assigns different values per Body* | After 1st |
 
 ### Situation: The "Auto" tab on Kerbalism "Vessel Pane"
 
 | Issue | Notes | Status |
-|---|---|---|
-| Experiment not listed on "Vessel Pane Auto" | RSC part roverBrain still uses old Experiment Id. | For 1st release |
+|:---|:---|:---|
+| Experiment not listed on "Vessel Pane Auto" | RSC part roverBrain still uses old Experiment Id. Also, it should open the TerminalGUI (not perform science from these buttons). | For 1st release (investigating) |
 
 </br></br>
 

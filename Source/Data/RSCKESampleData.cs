@@ -58,7 +58,7 @@ public class RSCKESampleData
             " | RSCKE Roll for Sample Mass: " + MassRoll +
             " | Analysis Mass Collected : " + CollectedMass + "Kg " +
             " | Sample Mass to be Stored: " + MassToStore + "Kg " +
-            " | Sample Data Amount to be Stored:" + DataAmount +
+            " | Sample Data Amount (Kerbalism):" + DataAmount + "MB "+
             " | Stored in Kerbalism Drive: " + StorageDriveName +
             " | Sample Final Science Value:" + ScienceValue;
     }

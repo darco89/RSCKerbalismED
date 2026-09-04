@@ -9,7 +9,7 @@ namespace RSCKerbalismED;
 /// Dispatches each instruction through the individual RSCKE GUI patches and records
 /// the patches actually applied during transpilation.
 /// </summary>
-internal sealed class RSCKEPatcherTerminalDrawGUI
+public class RSCKEPatcherTerminalDrawGUI
 {
     /// <summary>
     /// Individual patches applied to RSC's DrawRoverConsoleGUI() instruction stream.
