@@ -62,7 +62,7 @@ else {
 # ============================================================
 
 Write-Host "Waiting 10 seconds for logs..." -ForegroundColor Cyan
-Start-Sleep -Seconds 10
+Start-Sleep -Seconds 20
 
 # ============================================================
 # OPEN LOGS IN NOTEPAD++

@@ -37,6 +37,8 @@ Note: This mod alone provides no parts nor functionalities.
 # 🟢 WHAT IT IS
 </br>
 
+With RSCKE, just like for any other Kerbalism experiment, there's a limit to the samples mass to be gathered with the RSC rover parts. Therefore, instead of infinite science gathering, the new gameplay loop consists of finding an RSC Science Spot -> collect sample with a volume depending on the RSC Science Spot potential -> Store sample in Vessel's Kerbalism Drive -> collect Science to RnD, on recovery. Then, repeat for every biome where you can collect Surface Samples. But there's more.
+
 ### 📡 **RSC ↔ Kerbalism Integration** - *Compatibility and Configurability* </br>
 **»** **RSC** `RoverBrain` parts now perform *Analysis* of a `Kerbalism Experiment` (configurable) </br>
 **»** **RSCKE** safely handles `RSC` calls to **Stock's** `ModuleScienceContainer`, preventing errors </br>
@@ -65,13 +67,13 @@ Note: This mod alone provides no parts nor functionalities.
 </br>
 
 # 🔴 WHAT IT IS NOT
-</br>
 
 ###  **RSCKE is NOT standalone** </br>
-**»** This mod is only meant to be added to playthroughs with both RSC and Kerbalism </br>
+This mod is only meant to be added to playthroughs with both RSC and Kerbalism </br>
 </br>
+
 ### **RSCKE does not patch anything other than RSC** </br>
-**»** Suggestions for changes are welcome, but they must remain in scope (RSC <-> Kerbalism relationship) </br>
+Suggestions for changes are welcome, but they must remain in scope (RSC <-> Kerbalism relationship) </br>
 
 </br>
 
