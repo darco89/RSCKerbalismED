@@ -19,7 +19,7 @@ Thanks for your help everyone!
 | RSC considers Localization - Add PT/BR Localization | nice to have | After 1st |
 | Kerbalism Drive name used for samples storage is empty. use another property | nice to have | For 1st release |
 | There's still a log mentioning 1 invalid access to ModuleScienceContainer | onVesselLoad | Done |
-| Review remaining original RSC error logs and prevent them if feasible | list them somewhere | WIP |
+| Review remaining original RSC error logs and prevent them if feasible | only happened with cheats -> set position | Maybe leave it |
 
 ### Situation: RoverBrain Terminal GUI
 
@@ -30,7 +30,7 @@ Thanks for your help everyone!
 | Show (keep track) of how many spots were visited per biome | GUI - correction | For 1st release |
 | Show (keep track) of collected samples quantity and their mass | GUI - new | For 1st release |
 | Generate new GUI/screen for sample obtained result | GUI - new | For 1st release |
-| Review button Reset - it seems there's no changes necessary | integration | For 1st release |
+| Review button Reset - it seems there's no changes necessary (just do it after collecting sample) | integration | For 1st release |
 | Review button Upgrade - Costs science to assure better science gathering | integration | (investigating) |
 
 
@@ -38,16 +38,17 @@ Thanks for your help everyone!
 
 | Issue | Notes | Status |
 |:---|:---|:---|
-| Experiment not listed when filtering by current vessel | RSC part `roverBrain` still uses old Experiment Id. Parts might need to be patched| For 1st release|
-| Experiment is listed but not shwoing experiment info | Config? | For 1st release|
+| Experiment not listed when filtering by current vessel | Patched parts | Done |
+| Old Experiment still listed in experiments list | how come? there are no parts referencing it. are there? | Investigate |
+| Experiment is listed but not shwoing experiment info | config | Done |
 | Kerbalism shows Completed value "1.9x" meaning the player recovered 90% more of what Experiment limits | Science is still limited to "1x" | This is OK | 
-| Balance Science across biomes based on a single value? | Kerbalism assigns different values per Body* | After 1st |
+| Balance Science across biomes based on a single value? | Kerbalism assigns different values per Body | After 1st |
 
 ### Situation: The "Auto" tab on Kerbalism "Vessel Pane"
 
 | Issue | Notes | Status |
 |:---|:---|:---|
-| Experiment not listed on "Vessel Pane Auto" | RSC part roverBrain still uses old Experiment Id. Also, it should open the TerminalGUI (not perform science from these buttons). | For 1st release (investigating) |
+| Experiment not listed on "Vessel Pane Auto" | Listed now. Changing "Auto pane" status, also changes TerminalGUI state | Done |
 
 </br></br>
 
