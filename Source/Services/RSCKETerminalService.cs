@@ -82,7 +82,7 @@ internal static class RSCKETerminalService
     {
         if (experiment == null)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: Kerbalism Experiment is null.");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: Kerbalism Experiment is null.");
             return;
         }
 
@@ -100,51 +100,51 @@ internal static class RSCKETerminalService
 
         if (roverScience == null)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience module was not found. " +
-                "Experiment instance ID=" + experiment.GetInstanceID() + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience module was not found. " +
+            //     "Experiment instance ID=" + experiment.GetInstanceID() + ".");
             return;
         }
 
         if (!roverScience.IsPrimary)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience instance is not primary. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience instance is not primary. " +
+            //     "RSC instance ID=" + roverScience.GetInstanceID() + ".");
             return;
         }
 
         if (roverScience.roverScienceGUI?.consoleGUI == null)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: consoleGUI is null. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: consoleGUI is null. " +
+            //     "RSC instance ID=" + roverScience.GetInstanceID() + ".");
             return;
         }
 
         bool terminalOpen = roverScience.roverScienceGUI.consoleGUI.isOpen;
         bool experimentRunning = experiment.Running;
 
-        RSCKELogger.Info("Kerbalism Experiment state changed. " +
-            "Experiment instance ID=" + experiment.GetInstanceID() +
-            ", State=" + experiment.State +
-            ", Running=" + experimentRunning +
-            ", TerminalOpen=" + terminalOpen + ".");
+        // RSCKELogger.Info("Kerbalism Experiment state changed. " +
+        //     "Experiment instance ID=" + experiment.GetInstanceID() +
+        //     ", State=" + experiment.State +
+        //     ", Running=" + experimentRunning +
+        //     ", TerminalOpen=" + terminalOpen + ".");
 
         if (experimentRunning && !terminalOpen)
         {
-            RSCKELogger.Info("Kerbalism Experiment is Running and RSC Terminal is closed. Opening RSC Terminal.");
+            // RSCKELogger.Info("Kerbalism Experiment is Running and RSC Terminal is closed. Opening RSC Terminal.");
 
             roverScience.roverScienceGUI.consoleGUI.Toggle();
 
-            RSCKELogger.Info("RSC Terminal opened from Kerbalism Experiment state. " +
-                "TerminalOpen=" + roverScience.roverScienceGUI.consoleGUI.isOpen + ".");
+            // RSCKELogger.Info("RSC Terminal opened from Kerbalism Experiment state. " +
+            //     "TerminalOpen=" + roverScience.roverScienceGUI.consoleGUI.isOpen + ".");
         }
         else if (!experimentRunning && terminalOpen)
         {
-            RSCKELogger.Info("Kerbalism Experiment is Stopped and RSC Terminal is open. Closing RSC Terminal.");
+            // RSCKELogger.Info("Kerbalism Experiment is Stopped and RSC Terminal is open. Closing RSC Terminal.");
 
             roverScience.roverScienceGUI.consoleGUI.Hide();
 
-            RSCKELogger.Info("RSC Terminal closed from Kerbalism Experiment state. " +
-                "TerminalOpen=" + roverScience.roverScienceGUI.consoleGUI.isOpen + ".");
+            // RSCKELogger.Info("RSC Terminal closed from Kerbalism Experiment state. " +
+            //     "TerminalOpen=" + roverScience.roverScienceGUI.consoleGUI.isOpen + ".");
         }
     }
 
@@ -156,56 +156,56 @@ internal static class RSCKETerminalService
     {
         if (roverScience == null)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: roverScience is null.");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: roverScience is null.");
             return;
         }
 
         if (!roverScience.IsPrimary)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience instance is not primary. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() + ".");
+            //RSCKELogger.Info("RSC Terminal synchronization skipped: RoverScience instance is not primary. " +
+            //   "RSC instance ID=" + roverScience.GetInstanceID() + ".");
             return;
         }
 
         if (roverScience.roverScienceGUI?.consoleGUI == null)
         {
-            RSCKELogger.Info("RSC Terminal synchronization skipped: consoleGUI is null. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization skipped: consoleGUI is null. " +
+            //     "RSC instance ID=" + roverScience.GetInstanceID() + ".");
             return;
         }
 
         bool terminalOpen = roverScience.roverScienceGUI.consoleGUI.isOpen;
 
-        RSCKELogger.Info("RSC Terminal synchronization check. " +
-            "RSC instance ID=" + roverScience.GetInstanceID() +
-            ", TerminalOpen=" + terminalOpen +
-            ", IsPrimary=" + roverScience.IsPrimary + ".");
+        // RSCKELogger.Info("RSC Terminal synchronization check. " +
+        //     "RSC instance ID=" + roverScience.GetInstanceID() +
+        //     ", TerminalOpen=" + terminalOpen +
+        //     ", IsPrimary=" + roverScience.IsPrimary + ".");
 
         if (!terminalStates.TryGetValue(roverScience, out bool previousTerminalOpen))
         {
             terminalStates[roverScience] = terminalOpen;
 
-            RSCKELogger.Info("RSC Terminal synchronization initialized. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() +
-                ", TerminalOpen=" + terminalOpen + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization initialized. " +
+            //     "RSC instance ID=" + roverScience.GetInstanceID() +
+            //     ", TerminalOpen=" + terminalOpen + ".");
 
             return;
         }
 
         if (previousTerminalOpen == terminalOpen)
         {
-            RSCKELogger.Info("RSC Terminal synchronization: no terminal state change. " +
-                "RSC instance ID=" + roverScience.GetInstanceID() +
-                ", TerminalOpen=" + terminalOpen + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization: no terminal state change. " +
+            //     "RSC instance ID=" + roverScience.GetInstanceID() +
+            //     ", TerminalOpen=" + terminalOpen + ".");
             return;
         }
 
         terminalStates[roverScience] = terminalOpen;
 
-        RSCKELogger.Info("RSC Terminal state changed. " +
-            "RSC instance ID=" + roverScience.GetInstanceID() +
-            ", PreviousOpen=" + previousTerminalOpen +
-            ", CurrentOpen=" + terminalOpen + ".");
+        // RSCKELogger.Info("RSC Terminal state changed. " +
+        //     "RSC instance ID=" + roverScience.GetInstanceID() +
+        //     ", PreviousOpen=" + previousTerminalOpen +
+        //     ", CurrentOpen=" + terminalOpen + ".");
 
         KERBALISM.Experiment experiment = null;
 
@@ -226,42 +226,42 @@ internal static class RSCKETerminalService
             return;
         }
 
-        RSCKELogger.Info("RSC Terminal synchronization selected Kerbalism Experiment. " +
-            "Experiment instance ID=" + experiment.GetInstanceID() +
-            ", experiment_id=" + experiment.experiment_id +
-            ", State=" + experiment.State +
-            ", Running=" + experiment.Running + ".");
+        // RSCKELogger.Info("RSC Terminal synchronization selected Kerbalism Experiment. " +
+        //     "Experiment instance ID=" + experiment.GetInstanceID() +
+        //     ", experiment_id=" + experiment.experiment_id +
+        //     ", State=" + experiment.State +
+        //     ", Running=" + experiment.Running + ".");
 
         if (terminalOpen && experiment.State == KERBALISM.Experiment.RunningState.Stopped)
         {
-            RSCKELogger.Info("RSC Terminal opened and Kerbalism Experiment is Stopped. " +
-                "Calling Experiment.Toggle().");
+            // RSCKELogger.Info("RSC Terminal opened and Kerbalism Experiment is Stopped. " +
+            //     "Calling Experiment.Toggle().");
 
             experiment.Toggle();
 
-            RSCKELogger.Info("RSC Terminal open Toggle() returned. " +
-                "Experiment instance ID=" + experiment.GetInstanceID() +
-                ", State=" + experiment.State +
-                ", Running=" + experiment.Running + ".");
+            // RSCKELogger.Info("RSC Terminal open Toggle() returned. " +
+            //     "Experiment instance ID=" + experiment.GetInstanceID() +
+            //     ", State=" + experiment.State +
+            //     ", Running=" + experiment.Running + ".");
         }
         else if (!terminalOpen && experiment.State != KERBALISM.Experiment.RunningState.Stopped)
         {
-            RSCKELogger.Info("RSC Terminal closed and Kerbalism Experiment is not Stopped. " +
-                "Calling Experiment.Toggle().");
+            // RSCKELogger.Info("RSC Terminal closed and Kerbalism Experiment is not Stopped. " +
+            //     "Calling Experiment.Toggle().");
 
             experiment.Toggle();
 
-            RSCKELogger.Info("RSC Terminal closed Toggle() returned. " +
-                "Experiment instance ID=" + experiment.GetInstanceID() +
-                ", State=" + experiment.State +
-                ", Running=" + experiment.Running + ".");
+            // RSCKELogger.Info("RSC Terminal closed Toggle() returned. " +
+            //     "Experiment instance ID=" + experiment.GetInstanceID() +
+            //     ", State=" + experiment.State +
+            //     ", Running=" + experiment.Running + ".");
         }
         else
         {
-            RSCKELogger.Info("RSC Terminal synchronization made no Kerbalism state change. " +
-                "TerminalOpen=" + terminalOpen +
-                ", Experiment State=" + experiment.State +
-                ", Running=" + experiment.Running + ".");
+            // RSCKELogger.Info("RSC Terminal synchronization made no Kerbalism state change. " +
+            //     "TerminalOpen=" + terminalOpen +
+            //     ", Experiment State=" + experiment.State +
+            //     ", Running=" + experiment.Running + ".");
         }
     }
 }

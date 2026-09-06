@@ -59,7 +59,7 @@ internal static class PatchKerbalismExperimentRunningUpdate
         if (ecRate <= 0.0)
             return false;
 
-        // Consume ElectricCharge while the experiment is running.
+        // Consume ElectricCharge while the experiment is running (Terminal is open)
         double ecToConsume = ecRate * elapsed_s;
         if (ec.Amount <= 0.0)
         {

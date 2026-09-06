@@ -50,6 +50,7 @@ And there’s more...
 **»** **RSCKE** safely handles `RSC` calls to **Stock's** `ModuleScienceContainer`, preventing errors </br>
 **»** **RSC** `ScienceAnalysis` operation is intercepted by **RSCKE** which creates `Kerbalism samples` </br>
 **»** **RSCKE** provides sample mass calculation based on `RSC` and delegates storage to `Kerbalism` </br>
+**»** **RSCKE** does not process resource consumption. `Kerbalism` keeps in charge of that </br>
 **»** Configurable relation between **RSC** `ScienceSpot.Potentials` and  Science yield </br>
 **»** Seamless integration with `Kerbalism's `**Science Archive** and **Vessels** `LaunchApps` features </br>
 </br>
@@ -61,6 +62,7 @@ And there’s more...
 **»** `RSCKE Rover Samples` will be stored in Vessel's available `Kerbalism Drives`  </br>
 **»** Keeps `RoverBrain Terminal` for UI but with new information available  </br>
 **»** Does not keep RSC `ScienceDecay` logic; Sample gathering is limited by Kerbalism</br>
+**»** Keeps the RSC `RoverBrain` parts, but both have same behaviour - for now</br>
 </br>
 
 ### ⚖️ **Beyond Compatibility** - *Improvements & Emergent Rebalancing*  </br>

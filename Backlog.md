@@ -13,11 +13,11 @@ Thanks for your help everyone!
 
 | Issue | Notes | Status |
 |:---|:---|:---|
-| After confirming and storing sample, reset Science Spot | despawn dome and ROC : TODO | For 1st release |
+| After confirming and storing sample, reset Science Spot | Dome and ROC despawn  | Done |
 | Remove RSC outputs for ScienceDecay but leave its usage for RSC | its not used by RSCKE | Done |
 | RSC considers Localization | Inestigate | After 1st |
 | RSC considers Localization - Add PT/BR Localization | nice to have | After 1st |
-| Kerbalism Drive name used for samples storage is empty. use another property | nice to have | For 1st release |
+| Kerbalism Drive name used for samples storage is sometimes empty. only command parts seem to have names | nice to have | For 1st release |
 | There's still a log mentioning 1 invalid access to ModuleScienceContainer | onVesselLoad | Done |
 | Review remaining original RSC error logs and prevent them if feasible | only happened with cheats -> set position | Maybe leave it |
 

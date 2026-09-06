@@ -34,6 +34,8 @@ public static class RSCKEAnalysisService
         RSCKELogger.Info("Analysis for Experiment " + experimentId +
          " was completed. Science obtained: " + sampleController.GetSample().ScienceValue);
 
+        // Sample stored; reset Science Spot
+        roverScience.rover.scienceSpot.Reset();
         // NOTE: Probably have to do things after. Increment samples obtained, etc.
     }
 }

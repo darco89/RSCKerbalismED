@@ -13,6 +13,7 @@ internal static class PatchKerbalismExperimentBackgroundUpdate
     [HarmonyPrefix]
     private static bool Prefix(KERBALISM.Experiment __instance, ProtoPartModuleSnapshot m)
     {
+        // if its not our experiment, don't do anything here and let Kerbalism execute normally
         if (__instance == null || __instance.experiment_id != RSCKEConstants.ROVER_EXPERIMENT_ID)
             return true;
 
