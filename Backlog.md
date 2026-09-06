@@ -13,7 +13,7 @@ Thanks for your help everyone!
 
 | Issue | Notes | Status |
 |:---|:---|:---|
-| After confirming and storing sample, reset Science Spot | despawn dome and ROC | For 1st release |
+| After confirming and storing sample, reset Science Spot | despawn dome and ROC : TODO | For 1st release |
 | Remove RSC outputs for ScienceDecay but leave its usage for RSC | its not used by RSCKE | Done |
 | RSC considers Localization | Inestigate | After 1st |
 | RSC considers Localization - Add PT/BR Localization | nice to have | After 1st |
@@ -31,7 +31,7 @@ Thanks for your help everyone!
 | Show (keep track) of collected samples quantity and their mass | GUI - new | For 1st release |
 | Generate new GUI/screen for sample obtained result | GUI - new | For 1st release |
 | Review button Reset - it seems there's no changes necessary (just do it after collecting sample) | integration | For 1st release |
-| Review button Upgrade - Costs science to assure better science gathering | integration | (investigating) |
+| Review button Upgrade - Costs science to assure better science gathering | integration | (investigating)/after 1st |
 
 
 ### Situation: Kerbalism Science Archive
@@ -39,7 +39,7 @@ Thanks for your help everyone!
 | Issue | Notes | Status |
 |:---|:---|:---|
 | Experiment not listed when filtering by current vessel | Patched parts | Done |
-| Old Experiment still listed in experiments list | how come? there are no parts referencing it. are there? | Investigate |
+| Old Experiment still listed in experiments list | not anymore | Done |
 | Experiment is listed but not shwoing experiment info | config | Done |
 | Kerbalism shows Completed value "1.9x" meaning the player recovered 90% more of what Experiment limits | Science is still limited to "1x" | This is OK | 
 | Balance Science across biomes based on a single value? | Kerbalism assigns different values per Body | After 1st |
@@ -59,10 +59,9 @@ Thanks for your help everyone!
 
 - Compatibility with `ProbeControlRoom` and `RasterPropMonitor` (maybe control Rover from Mission Control and control experiment via MFDs. Or maybe, even, have the Rover Terminal itself in MFDs)
 
-- Allow configurable Energy Consumption for `RoverBrain` parts, depending on current activity (actively scanning for science spots or not).
+- Allow configurable Energy Consumption for `RoverBrain` parts, depending on current activity (actively scanning for science spots or not). DONE.
 
 - The `Album` idea - RSC spawns objects ROC1 or ROC2 at science spots. If not too costly, maybe try to have RoverBrain parts recognize a camera in the vessel to take pictures with, when Sample is Gathered. The picture would be stored in the RoverBrain "Album" and visible in both Terminal GUI and MFDs. Too much? Oh, this could be interesting for Telescopes and Cameras in general, too.
-
 
 
 ## RSCKE ideas for other mods
