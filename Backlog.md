@@ -18,8 +18,8 @@ Thanks for your help everyone!
 | RSC considers Localization | Inestigate | After 1st |
 | RSC considers Localization - Add PT/BR Localization | nice to have | After 1st |
 | Kerbalism Drive name used for samples storage is empty. use another property | nice to have | For 1st release |
-| There's still a log mentioning 1 invalid access to ModuleScienceContainer | (maybe not RSC) | investigate |
-| Review remaining original RSC error logs and prevent them if feasible | try to stop them | investigate |
+| There's still a log mentioning 1 invalid access to ModuleScienceContainer | onVesselLoad | Done |
+| Review remaining original RSC error logs and prevent them if feasible | list them somewhere | WIP |
 
 ### Situation: RoverBrain Terminal GUI
 
@@ -30,8 +30,8 @@ Thanks for your help everyone!
 | Show (keep track) of how many spots were visited per biome | GUI - correction | For 1st release |
 | Show (keep track) of collected samples quantity and their mass | GUI - new | For 1st release |
 | Generate new GUI/screen for sample obtained result | GUI - new | For 1st release |
-| Review button Reset | integration | For 1st release |
-| Review button Upgrade | integration | (investigating) |
+| Review button Reset - it seems there's no changes necessary | integration | For 1st release |
+| Review button Upgrade - Costs science to assure better science gathering | integration | (investigating) |
 
 
 ### Situation: Kerbalism Science Archive

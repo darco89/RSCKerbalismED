@@ -17,7 +17,7 @@ A KSP compatibility **mod** that brings [**Rover Science Continued**](https://gi
 | **Full Name** | RoverScience Continued — Kerbalism Edition |
 | **Short Name** | RSCKE |
 | **RSCKE General Settings** | RSCKerbalismED.cfg |
-| **Kerbalism Experiment Config** | RSCK_RoverBrain_Experiment.cfg |
+| **Kerbalism Experiment Config** | RSCKE_RoverBrain_Experiment.cfg |
 | **C# Namespace** | `RSCKerbalismED` |
 | **Harmony ID** | `RSCKerbalismED` |
 | **Log Prefix** | [RSCKerbalismED] |

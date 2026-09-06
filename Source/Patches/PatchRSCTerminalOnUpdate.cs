@@ -47,11 +47,11 @@ internal static class PatchRSCTerminalOnUpdate
         try
         {
             RSCKETerminalService.CloseTerminalWhenFullControlLost(__instance);
+            RSCKETerminalService.SyncKerbalismExperimentState(__instance);
         }
         catch (Exception ex)
         {
             RSCKELogger.Error("Could not close Rover Terminal GUI.", ex);
         }
     }
-
 }
